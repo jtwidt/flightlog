@@ -1,7 +1,10 @@
 package us.navonod.flightlog;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -15,19 +18,16 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pilot_id")
+    @JsonIgnore
     private Pilot pilot;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plane_model_id")
-    private PlaneModel planeModel;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date departure;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date arrival;
-    private int duration;
     private String origin;
     private String destination;
+    private String aircraftType;
+    private String pilotNotes;
 
     public Long getId() {
         return id;
@@ -45,36 +45,12 @@ public class Flight {
         this.pilot = pilot;
     }
 
-    public PlaneModel getPlaneModel() {
-        return planeModel;
-    }
-
-    public void setPlaneModel(PlaneModel planeModel) {
-        this.planeModel = planeModel;
-    }
-
     public Date getDeparture() {
         return departure;
     }
 
     public void setDeparture(Date departure) {
         this.departure = departure;
-    }
-
-    public Date getArrival() {
-        return arrival;
-    }
-
-    public void setArrival(Date arrival) {
-        this.arrival = arrival;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     public String getOrigin() {
@@ -91,5 +67,21 @@ public class Flight {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public String getAircraftType() {
+        return aircraftType;
+    }
+
+    public void setAircraftType(String aircraftType) {
+        this.aircraftType = aircraftType;
+    }
+
+    public String getPilotNotes() {
+        return pilotNotes;
+    }
+
+    public void setPilotNotes(String pilotNotes) {
+        this.pilotNotes = pilotNotes;
     }
 }

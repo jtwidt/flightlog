@@ -1,5 +1,6 @@
 package us.navonod.flightlog;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
@@ -14,8 +15,9 @@ public class Pilot {
     private Long id;
     private String firstName;
     private String lastName;
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pilot")
-//    private List<Flight> flights;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pilot")
+    @JsonIgnore
+    private List<Flight> flights;
     public Long getId() {
         return id;
     }
@@ -38,5 +40,12 @@ public class Pilot {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @PreRemove
+    private void removeFlightAssignments() {
+        for (Flight flight : flights) {
+            flight.setPilot(null);
+        }
     }
 }
